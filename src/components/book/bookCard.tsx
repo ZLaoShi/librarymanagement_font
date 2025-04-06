@@ -1,5 +1,5 @@
 import { Flex, Text, Button, Card, Badge } from "@radix-ui/themes";
-import './BookCard.scss'; 
+import './bookCard.scss'; 
 import { Book } from '../../types/book';
 
 type BookCardProps = Book;
