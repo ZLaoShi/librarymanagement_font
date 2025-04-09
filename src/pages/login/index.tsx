@@ -88,6 +88,18 @@ export const LoginPage = () => {
             <Button type="submit" disabled={loading}>
               {loading ? '登录中...' : '登录'}
             </Button>
+
+            <Flex justify="center" gap="2">
+              <Text size="2">还没有账号？</Text>
+              <Text 
+                size="2" 
+                color="blue" 
+                onClick={() => navigate('/register')}
+                style={{ cursor: 'pointer' }}
+              >
+                去注册
+              </Text>
+            </Flex>
           </Flex>
         </form>
       </Card>

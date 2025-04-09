@@ -34,3 +34,4 @@ export const logoutAction = atom(null, (get, set) => {
     isAdmin: false
   });
 });
+//TODO 退出登录后没有直接回到首页
