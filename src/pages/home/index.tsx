@@ -8,6 +8,7 @@ import { Book } from '../../types/book';
 import './index.scss';
 import { BookList } from '../../components/book/bookList';
 import { BookSearch } from '../../components/book/bookSearch';
+import { Flex } from '@radix-ui/themes';
 
 // 定义两个查询中预期数据结构的接口
 interface PageInfo {
@@ -89,7 +90,9 @@ export const HomePage = () => {
       <h1 className="page-title">{isSearching ? `搜索 "${finalSearchTerm}" 结果` : '图书列表'}</h1>
 
       {/* 渲染搜索组件 - 不再需要通过 props 传递搜索逻辑 */}
-      <BookSearch />
+      <Flex justify="center" mb="4">
+        <BookSearch />
+      </Flex>
 
       {/* 如果搜索无结果则显示提示信息 */}
       {noResultsFound && <div style={{ marginTop: '1rem', textAlign: 'center' }}>找不到与 "{finalSearchTerm}" 相关的图书。</div>}

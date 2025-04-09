@@ -1,0 +1,82 @@
+import { useAtom } from 'jotai';
+import { useState } from 'react';
+import { useMutation, useQuery } from '@apollo/client';
+import { Card, Flex, Text, Button } from '@radix-ui/themes';
+import { GET_USER_INFO, UPDATE_USER_INFO } from '../../graphql/queries/userInfo';
+import { UserInfo } from '../../types/userInfo';
+import { authAtom } from '../../stores/authAtoms';
+import { UserInfoDisplay } from '../../components/userInfo/display/userInfoDisplay';
+import { UserInfoEdit } from '../../components/userInfo/edit/userInfoEdit';
+import { AdminUserInfoEdit } from '../../components/userInfo/edit/adminUserInfoEdit';
+import './index.scss';
+
+export const UserInfoPage = () => {
+  const [auth] = useAtom(authAtom);
+  const [isEditing, setIsEditing] = useState(false);
+  
+  const { loading, error, data } = useQuery<{ userInfo: UserInfo }>(GET_USER_INFO, {
+    variables: { id: auth.userId },
+    skip: !auth.userId
+  });
+
+  const [updateUserInfo] = useMutation(UPDATE_USER_INFO, {
+    onCompleted: () => {
+      setIsEditing(false);
+    },
+  });
+
+  if (!auth.userId) return <Text>未找到用户信息</Text>;
+  if (loading) return <Text>加载中...</Text>;
+  if (error) return <Text color="red">错误: {error.message}</Text>;
+
+  const userInfo = data?.userInfo;
+
+  const handleSave = async (formData: any) => {
+    try {
+      await updateUserInfo({
+        variables: {
+          input: {
+            ...formData
+          }
+        }
+      });
+    } catch (error) {
+      console.error('更新失败:', error);
+    }
+  };
+
+  return (
+    <Flex justify="center" className="profile-container">
+      <Card size="3" style={{ width: '100%', maxWidth: '800px' }}>
+        <Flex direction="column" gap="4" p="4">
+          <Flex justify="between" align="center">
+            <Text size="6" weight="bold">个人信息</Text>
+            {!isEditing && (
+              <Button onClick={() => setIsEditing(true)}>
+                修改
+              </Button>
+            )}
+          </Flex>
+          
+          {isEditing ? (
+            auth.isAdmin ? (
+              <AdminUserInfoEdit
+                userInfo={userInfo!}
+                onSave={handleSave}
+                onCancel={() => setIsEditing(false)}
+              />
+            ) : (
+              <UserInfoEdit
+                userInfo={userInfo!}
+                onSave={handleSave}
+                onCancel={() => setIsEditing(false)}
+              />
+            )
+          ) : (
+            <UserInfoDisplay userInfo={userInfo} />
+          )}
+        </Flex>
+      </Card>
+    </Flex>
+  );
+};
