@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Flex, Text } from '@radix-ui/themes';
 import { authAtom } from '../../stores/authAtoms';
 import { logoutAction } from '../../stores/authActions';
@@ -9,11 +9,13 @@ export const Header = () => {
   const [auth] = useAtom(authAtom);
   const [, logout] = useAtom(logoutAction);
   const location = useLocation();
+  const navigate = useNavigate();
   
   const isActive = (path: string) => location.pathname === path;
 
   const handleLogout = () => {
     logout();
+    navigate('/');  // 退出后自动跳转到首页
   };
 
   return (
@@ -29,6 +31,9 @@ export const Header = () => {
           
           {auth.isAuthenticated ? (
             <>
+              <Link to="/my-books" className={`nav-link ${isActive('/my-books') ? 'active' : ''}`}>
+                我的借阅
+              </Link>
               <Link to="/profile" className={`nav-link ${isActive('/profile') ? 'active' : ''}`}>
                 个人信息
               </Link>

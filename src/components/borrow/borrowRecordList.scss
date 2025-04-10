@@ -1,0 +1,15 @@
+.borrow-record-table {
+  width: 100%;
+  
+  .rt-TableCell, .rt-TableColumnHeaderCell {
+    padding: 1rem;
+  }
+  
+  .rt-TableRow:hover {
+    background-color: var(--gray-2);
+  }
+  
+  .rt-Badge {
+    font-size: 0.75rem;
+  }
+}

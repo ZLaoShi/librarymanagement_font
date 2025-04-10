@@ -5,6 +5,7 @@ import { LoginPage } from '../pages/login';
 import { ProtectedRoute } from '../components/auth/protectedRoute';
 import { UserInfoPage } from '../pages/profile'
 import { RegisterPage } from '../pages/register';
+import { BorrowPage } from '../pages/borrow';
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,14 @@ export const router = createBrowserRouter([
       {
         path:'/register',
         element:<RegisterPage/>
+      },
+      {
+        path:'/my-books',
+         element: (
+          <ProtectedRoute>
+            <BorrowPage/>
+          </ProtectedRoute>
+        )
       }
 
     ]

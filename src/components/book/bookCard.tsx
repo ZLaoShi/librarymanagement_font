@@ -1,10 +1,16 @@
+import { useAtom } from 'jotai';
+import { useMutation } from '@apollo/client';
 import { Flex, Text, Button, Card, Badge } from "@radix-ui/themes";
-import './bookCard.scss'; 
 import { Book } from '../../types/book';
+import { BORROW_BOOK } from '../../graphql/mutations/borrowRecord';
+import { authAtom } from '../../stores/authAtoms';
+import { useNavigate } from 'react-router-dom';
+import './bookCard.scss'; 
 
 type BookCardProps = Book;
 
 export const BookCard = ({ 
+  id,
   title, 
   author, 
   isbn, 
@@ -12,9 +18,38 @@ export const BookCard = ({
   publisher, 
   availableCopies,
   totalCopies,
-  category,
-  id 
+  category
 }: BookCardProps) => {
+  const [auth] = useAtom(authAtom);
+  const navigate = useNavigate();
+  
+  const [borrowBook, { loading }] = useMutation(BORROW_BOOK, {
+    onCompleted: () => {
+      // 借书成功后跳转到我的借阅页面
+      navigate('/my-books');
+    }
+  });
+
+  const handleBorrow = async () => {
+    if (!auth.isAuthenticated) {
+      // 未登录，跳转到登录页面
+      navigate('/login', { state: { from: location.pathname } });
+      return;
+    }
+
+    try {
+      await borrowBook({
+        variables: {
+          input: {
+            bookId: id
+          }
+        }
+      });
+    } catch (error) {
+      console.error('借书失败:', error);
+    }
+  };
+
   return (
     <Card className="book-card">
       <Flex direction="column" gap="2">
@@ -36,10 +71,10 @@ export const BookCard = ({
 
         <Button 
           variant="solid" 
-          disabled={availableCopies === 0}
-          onClick={() => {/* TODO: 跳转到详情页 */}}
+          disabled={availableCopies === 0 || loading}
+          onClick={handleBorrow}
         >
-          查看详情
+          {loading ? '借阅中...' : '借阅'}
         </Button>
       </Flex>
     </Card>
