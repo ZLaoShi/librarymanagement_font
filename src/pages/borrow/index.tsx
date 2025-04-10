@@ -67,7 +67,9 @@ export const BorrowPage = () => {
   };
 
   const borrowRecords = data?.myBorrowRecords?.content || [];
-  const totalPages = data?.myBorrowRecords?.pageInfo?.totalPages || 1;
+  const pageInfo = data?.myBorrowRecords?.pageInfo;
+  const totalPages = pageInfo?.totalPages || 1;
+  const totalElements = pageInfo?.totalElements || 0;  // 添加总记录数
 
   return (
     <Box className="borrow-page">
@@ -85,7 +87,7 @@ export const BorrowPage = () => {
       <Card>
         <Flex direction="column" gap="4" p="4">
           <Flex justify="between" align="center">
-            <Text size="6" weight="bold">我的借阅</Text>
+            <Text size="6" weight="bold">我的借阅 {totalElements > 0 && `(共 ${totalElements} 条记录)`}</Text>
             <Button onClick={() => refetch()} disabled={loading}>
               刷新
             </Button>
@@ -101,51 +103,14 @@ export const BorrowPage = () => {
               <Button onClick={() => refetch()}>重试</Button>
             </Flex>
           ) : (
-            <>
-              <BorrowRecordList 
-                records={borrowRecords} 
-                onReturn={handleReturn}
-                loading={returningBook}
-              />
-              
-              {totalPages > 1 && (
-                <Flex justify="center" gap="2" mt="4" className="pagination">
-                  <Button 
-                    variant="soft" 
-                    disabled={currentPage === 1}
-                    onClick={() => handlePageChange(currentPage - 1)}
-                  >
-                    上一页
-                  </Button>
-                  
-                  <Flex gap="1" align="center">
-                    {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                      const start = Math.max(1, currentPage - 2);
-                      const end = Math.min(totalPages, start + 4);
-                      return start + i <= end ? start + i : null;
-                    })
-                    .filter(Boolean)
-                    .map((page) => (
-                      <Button
-                        key={page}
-                        variant={currentPage === page ? "solid" : "soft"}
-                        onClick={() => handlePageChange(page!)}
-                      >
-                        {page}
-                      </Button>
-                    ))}
-                  </Flex>
-                  
-                  <Button 
-                    variant="soft"
-                    disabled={currentPage === totalPages}
-                    onClick={() => handlePageChange(currentPage + 1)}
-                  >
-                    下一页
-                  </Button>
-                </Flex>
-              )}
-            </>
+            <BorrowRecordList 
+              records={borrowRecords} 
+              onReturn={handleReturn}
+              loading={returningBook}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           )}
         </Flex>
       </Card>
