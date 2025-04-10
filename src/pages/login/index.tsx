@@ -5,14 +5,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Button, Card, Flex, Text, TextField } from '@radix-ui/themes';
 import { LOGIN } from '../../graphql/mutations/auth';
 import { loginAction } from '../../stores/authActions';
-
+import { parseJwt } from '../../utils/jwt';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [,login] = useAtom(loginAction);
-  // 获取用户之前尝试访问的页面
-  const from = location.state?.from?.pathname || "/";
   
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,13 +18,25 @@ export const LoginPage = () => {
 
   const [loginMutation, { loading }] = useMutation(LOGIN, {
     onCompleted: (data) => {
+      const token = data.login.token;
+      const decoded = parseJwt(token);
+      const isAdmin = decoded?.role === '1';
+      
       // 使用 action 来更新状态
       login({
-        token: data.login.token,
+        token: token,
         username: data.login.username
       });
-      // 登录成功后导航到原来想访问的页面
-      navigate(from, { replace: true });
+
+      // 根据用户角色决定跳转目标
+      if (isAdmin) {
+        // 管理员用户跳转到管理后台
+        navigate('/admin', { replace: true });
+      } else {
+        // 普通用户跳转到之前的页面或首页
+        const from = location.state?.from?.pathname || "/";
+        navigate(from, { replace: true });
+      }
     },
     onError: (error) => {
       setError(error.message);

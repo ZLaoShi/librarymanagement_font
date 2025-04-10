@@ -1,0 +1,12 @@
+.admin-header {
+  background-color: var(--accent-9);
+  color: white;
+  padding: 1rem;
+  height: 60px;
+  
+  .header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+}

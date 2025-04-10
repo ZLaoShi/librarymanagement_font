@@ -16,7 +16,6 @@
     "framer-motion": "^12.6.3",
     "graphql": "^16.10.0",
     "jotai": "^2.12.2",
-    "radix-ui": "^1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",

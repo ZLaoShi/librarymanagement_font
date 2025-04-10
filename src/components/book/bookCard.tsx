@@ -2,7 +2,7 @@ import { useAtom } from 'jotai';
 import { useMutation } from '@apollo/client';
 import { Flex, Text, Button, Card, Badge } from "@radix-ui/themes";
 import { Book } from '../../types/book';
-import { BORROW_BOOK } from '../../graphql/mutations/borrowRecord';
+import { BORROW_BOOK } from '../../graphql/mutations/user/borrowRecord';
 import { authAtom } from '../../stores/authAtoms';
 import { useNavigate } from 'react-router-dom';
 import './bookCard.scss'; 

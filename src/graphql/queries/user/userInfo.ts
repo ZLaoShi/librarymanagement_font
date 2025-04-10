@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
-export const CREATE_USER_INFO = gql`
-  mutation CreateUserInfo($input: UserInfoInput!) {
-    createUserInfo(input: $input) {
+export const GET_USER_INFO = gql`
+  query GetUserInfo($id: ID!) {
+    userInfo(id: $id) {
       id
       fullName
       phone
@@ -13,3 +13,4 @@ export const CREATE_USER_INFO = gql`
     }
   }
 `;
+

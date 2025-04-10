@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
-import { Box, Card, Flex, Text, Button } from '@radix-ui/themes';
-import { Toast } from 'radix-ui'
-import { GET_MY_BORROW_RECORDS } from '../../graphql/queries/borrowRecordList';
-import { RETURN_BOOK } from '../../graphql/mutations/borrowRecord';
-import { BorrowRecordList } from '../../components/borrow/borrowRecordList';
-import { BorrowRecord } from '../../types/borrowRecord';
+import { useQuery, useMutation } from "@apollo/client";
+import { Box, Card, Flex, Button, Text } from "@radix-ui/themes";
+import { useState } from "react";
+import { BorrowRecordList } from "../../components/borrow/borrowRecordList";
+import { RETURN_BOOK } from "../../graphql/mutations/user/borrowRecord";
+import { GET_MY_BORROW_RECORDS } from "../../graphql/queries/user/borrowRecordList";
+import { BorrowRecord } from "../../types/borrowRecord";
+import { Message } from "../../components/common/message";
 import './index.scss';
 
 interface BorrowRecordsData {
@@ -24,8 +24,8 @@ interface BorrowRecordsData {
 export const BorrowPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
-  const [toastOpen, setToastOpen] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  const [messageOpen, setMessageOpen] = useState(false);
+  const [messageText, setMessageText] = useState('');
   const [isSuccess, setIsSuccess] = useState(true);
 
   const { loading, error, data, refetch } = useQuery<BorrowRecordsData>(GET_MY_BORROW_RECORDS, {
@@ -36,14 +36,14 @@ export const BorrowPage = () => {
   const [returnBook, { loading: returningBook }] = useMutation(RETURN_BOOK, {
     onCompleted: (data) => {
       setIsSuccess(true);
-      setToastMessage(`《${data.returnBook.book.title}》归还成功！`);
-      setToastOpen(true);
+      setMessageText(`《${data.returnBook.book.title}》归还成功！`);
+      setMessageOpen(true);
       refetch();
     },
     onError: (error) => {
       setIsSuccess(false);
-      setToastMessage(`归还失败: ${error.message}`);
-      setToastOpen(true);
+      setMessageText(`归还失败: ${error.message}`);
+      setMessageOpen(true);
       console.error('归还失败详情:', error);
     }
   });
@@ -73,16 +73,12 @@ export const BorrowPage = () => {
 
   return (
     <Box className="borrow-page">
-      <Toast.Root 
-        open={toastOpen} 
-        onOpenChange={setToastOpen}
-        type="foreground"
-        className={isSuccess ? 'success-toast' : 'error-toast'}
-      >
-        <Toast.Title>{isSuccess ? '操作成功' : '操作失败'}</Toast.Title>
-        <Toast.Description>{toastMessage}</Toast.Description>
-        <Toast.Close />
-      </Toast.Root>
+      <Message 
+        type={isSuccess ? 'success' : 'error'}
+        message={messageText}
+        open={messageOpen}
+        onClose={() => setMessageOpen(false)}
+      />
 
       <Card>
         <Flex direction="column" gap="4" p="4">

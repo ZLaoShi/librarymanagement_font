@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { Card, Flex, Text } from '@radix-ui/themes';
-import { CREATE_USER_INFO } from '../../../graphql/mutations/userInfo';
+import { CREATE_USER_INFO } from '../../../graphql/mutations/user/userInfo';
 import { UserInfoEdit } from '../edit/userInfoEdit';
 import { AdminUserInfoEdit } from '../edit/adminUserInfoEdit';
 import { BaseUserInfoFormData } from '../edit/baseUserInfoEdit';

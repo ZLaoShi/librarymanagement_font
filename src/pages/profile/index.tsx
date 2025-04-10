@@ -2,7 +2,7 @@ import { useAtom } from 'jotai';
 import { useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { Card, Flex, Text, Button } from '@radix-ui/themes';
-import { GET_USER_INFO, UPDATE_USER_INFO } from '../../graphql/queries/userInfo';
+import { GET_USER_INFO } from '../../graphql/queries/user/userInfo';
 import { UserInfo } from '../../types/userInfo';
 import { authAtom } from '../../stores/authAtoms';
 import { UserInfoDisplay } from '../../components/userInfo/display/userInfoDisplay';
@@ -10,6 +10,7 @@ import { UserInfoEdit } from '../../components/userInfo/edit/userInfoEdit';
 import { AdminUserInfoEdit } from '../../components/userInfo/edit/adminUserInfoEdit';
 import { UserInfoCreate } from '../../components/userInfo/create/userInfoCreate';
 import './index.scss';
+import { UPDATE_USER_INFO } from '../../graphql/mutations/user/userInfo';
 
 export const UserInfoPage = () => {
   const [auth] = useAtom(authAtom);
