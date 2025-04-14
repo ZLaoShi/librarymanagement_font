@@ -21,3 +21,25 @@ export const GET_ACCOUNTS = gql`
     }
   }
 `;
+
+export const SEARCH_ACCOUNTS = gql`
+  query SearchAccounts($keyword: String!, $page: Int, $size: Int) {
+    searchAccounts(keyword: $keyword, page: $page, size: $size) {
+      content {
+        id
+        username
+        email
+        createdAt
+        lastLogin
+        status
+      }
+      pageInfo {
+        currentPage
+        pageSize
+        totalPages
+        totalElements
+        hasNext
+      }
+    }
+  }
+`;

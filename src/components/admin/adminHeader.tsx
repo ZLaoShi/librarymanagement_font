@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import { useNavigate } from 'react-router-dom';
-import { Box, Flex, Text, Button } from '@radix-ui/themes';
+import { Box, Flex, Text } from '@radix-ui/themes';
 import './adminHeader.scss';
 import { logoutAction } from '../../stores/authActions';
 import { authAtom } from '../../stores/authAtoms';
@@ -21,9 +21,9 @@ export const AdminHeader = () => {
         <Text size="5" weight="bold">图书管理系统 - 管理后台</Text>
         <Flex gap="4" align="center">
           <Text>欢迎您，{auth.username}</Text>
-          <Button variant="soft" onClick={handleLogout}>
+          <a href="#" onClick={handleLogout} className="logout-link">
             退出登录
-          </Button>
+          </a>
         </Flex>
       </Flex>
     </Box>
